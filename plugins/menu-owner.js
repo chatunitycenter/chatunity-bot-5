@@ -20,7 +20,7 @@ const handler = async (message, { conn, usedPrefix, command }) => {
 
     const menuText = generateMenuText(usedPrefix, botName, userCount);
 
-    const imagePath = './menu/chatunitybot.gif';
+    const imagePath = './menu/chatunitybot.jpg';
     await conn.sendMessage(
         message.chat,
         {

@@ -78,7 +78,7 @@ ${statusList.split('\n').map(line => `┃◈┃• ${line}`).join('\n')}
 `.trim();
 
   // Percorso dell'immagine
-  const imagePath = path.join(__dirname, '../menu/chatunitybot.gif');
+  const imagePath = path.join(__dirname, '../menu/chatunitybot.jpg');
 
   // Invia il menu con l'immagine e i bottoni
   await conn.sendMessage(m.chat, {
