@@ -16,16 +16,16 @@
 "eslint": "eslint .",
 "eslintfix": "eslint --fix ."
 },
-"homepage": "https://github.com/chatunitycenter/chatunity-bot-5-essential",
+"homepage": "https://github.com/chatunitycenter/chatunity-bot-essential",
 "author": {
 "name": "chatunity"
 },
 "repository": {
 "type": "git",
-"url": "git+https://github.com/chatunitycenter/chatunity-bot-5-essential.git"
+"url": "git+https://github.com/chatunitycenter/chatunity-bot-essential.git"
 },
 "bugs": {
-"url": "https://github.com/chatunitycenter/chatunity-bot-5-essential/issues"
+"url": "https://github.com/chatunitycenter/chatunity-bot-essential/issues"
 },
 "license": "GPL-3.0-or-later",
 "dependencies": {
@@ -119,3 +119,5 @@
   "eslint-config-google": "^0.14.0"
 }
 }
+  
+  
