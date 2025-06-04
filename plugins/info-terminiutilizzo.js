@@ -87,7 +87,7 @@ _- NON utilizzare ripetutamente il comando SPAM, poiché potrebbe causare un mal
 _- Quando utilizzi determinati comandi che hanno l'obiettivo di causare disagio, inquietudine, fastidio o altri termini simili, verranno applicate le rispettive sanzioni o avvisi per preservare l'integrità degli utenti e il funzionamento di chatunity-bot._
 
 *QUESTO È IL REPOSITORIO UFFICIALE*
-https://github.com/chatunitycenter/chatunity-bot
+https://github.com/chatunitycenter/chatunity-bot-5
 
 
 *DONA ALLA CREATRICE SU QUESTO ACCOUNT UFFICIALE*
