@@ -1,4 +1,4 @@
-console.log('avviando...')
+console.log('Preparo bixby...')
 import { join, dirname } from 'path'
 import { createRequire } from "module";
 import { fileURLToPath } from 'url'
@@ -7,25 +7,16 @@ import { watchFile, unwatchFile } from 'fs'
 import cfonts from 'cfonts';
 import { createInterface } from 'readline'
 import yargs from 'yargs'
-import { EventEmitter } from 'events';
-
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(__dirname) 
 const { name, author } = require(join(__dirname, './package.json')) 
 const { say } = cfonts
 const rl = createInterface(process.stdin, process.stdout)
 
-// Aumenta il limite dei listener
-EventEmitter.defaultMaxListeners = 20;
-
-say('CHATUNITY\nBot\n4.0', {
-    font: 'chrome',
-    align: 'center',
-    gradient: ['red', 'magenta']})
-    say(`developed by chatunity`, {
-    font: 'console',
-    align: 'center',
-    gradient: ['red', 'magenta']})
+say('\nChatunity\nBot', {
+font: 'block',
+align: 'center',
+color: ['cyan', 'green']})
 
 var isRunning = false
 /**
@@ -37,6 +28,10 @@ if (isRunning) return
 isRunning = true
 let args = [join(__dirname, file), ...process.argv.slice(2)]
 
+say('developed by chatunity', {
+font: 'console',
+align: 'center',
+color: ['cyan', 'blue']})
   
 setupMaster({
 exec: args[0],
