@@ -24,7 +24,7 @@ const handler = async (message, { conn, usedPrefix }) => {
     
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const videoPath = path.join(__dirname, '../menu/chatunity-bot.gif'); 
+    const videoPath = path.join(__dirname, '../menu/chatunity-bot.jpg'); 
 
     
     await conn.sendMessage(message.chat, {
