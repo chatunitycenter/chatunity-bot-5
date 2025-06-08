@@ -1,173 +1,180 @@
-let userSpamCounters = {};  // Start
-const STICKER_LIMIT = 6;  // Start
-const PHOTO_VIDEO_LIMIT = 3;  // Start
-const RESET_TIMEOUT = 5000;  // Start
+const userCommandSpamCounters = new Map();
+const userSpamCounters = new Map();
 
-let userCommandSpamCounters = {};
-const COMMAND_SPAM_LIMIT = 5; // Numero massimo di comandi consentiti in un breve periodo
-const BAN_DURATION = 60 * 60 * 1000; // Durata del ban in millisecondi (1 ora)
+// Configurazioni
+const LIMITS = {
+    COMMAND: 5,         // Max comandi in 5 secondi
+    STICKER: 6,         // Max sticker in 5 secondi
+    MEDIA: 3,           // Max foto/video in 5 secondi
+    TAG_ALL: 1,         // Max @all/@everyone
+    RESET_TIMEOUT: 5000 // 5 secondi
+};
+
+const PUNISHMENTS = {
+    BAN_DURATION: 3600000, // 1 ora in ms
+    TEMP_RESTRICT: true    // Restrizione temporanea del gruppo
+};
 
 export async function before(m, { isAdmin, isBotAdmin, conn }) {
+    // Filtri iniziali
     if (m.isBaileys && m.fromMe) return true;
     if (!m.isGroup) return false;
 
-    let chat = global.db.data.chats[m.chat] || {};
-    let bot = global.db.data.settings[this.user.jid] || {};
-    let delet = m.key.participant;
-    let bang = m.key.id;
-    const sender = m.sender;  // Start
-    const isOwner = global.owner.map(([number]) => number + '@s.whatsapp.net').includes(m.sender);
+    const { chat, sender, isOwner } = initializeContext(m);
+    const { isCommand, isSticker, isMedia, isMassTag } = checkMessageType(m);
 
-    // Controlla se la funzione antispam comandi è attiva
-    if (chat.antispamcomandi && isOwner) {
-        // Controlla se il messaggio è un comando
-        const isCommand = m.text && m.text.startsWith('.');
-        if (isCommand) {
-            // Inizializza il contatore per l'utente
-            if (!userCommandSpamCounters[m.chat]) {
-                userCommandSpamCounters[m.chat] = {};
-            }
-            if (!userCommandSpamCounters[m.chat][sender]) {
-                userCommandSpamCounters[m.chat][sender] = { count: 0, timer: null };
-            }
-
-            const counter = userCommandSpamCounters[m.chat][sender];
-            counter.count++;
-
-            // Controlla se l'utente ha superato il limite
-            if (counter.count > COMMAND_SPAM_LIMIT) {
-                if (isBotAdmin) {
-                    try {
-                        // Bannare l'utente
-                        await conn.groupParticipantsUpdate(m.chat, [sender], 'remove');
-                        await conn.sendMessage(m.chat, { text: `*SPAM COMANDI RILEVATO*\nL'utente @${sender.split('@')[0]} è stato bannato per 1 ora.`, mentions: [sender] });
-
-                        // Imposta un timer per rimuovere il ban dopo 1 ora
-                        setTimeout(async () => {
-                            await conn.groupParticipantsUpdate(m.chat, [sender], 'add');
-                            await conn.sendMessage(m.chat, { text: `*BAN TERMINATO*\nL'utente @${sender.split('@')[0]} è stato riammesso al gruppo.`, mentions: [sender] });
-                        }, BAN_DURATION);
-                    } catch (error) {
-                        console.error('Errore durante il ban per spam comandi:', error);
-                    }
-                } else {
-                    console.log('Il bot non è amministratore, impossibile bannare l\'utente.');
-                }
-
-                // Resetta il contatore
-                delete userCommandSpamCounters[m.chat][sender];
-            } else {
-                // Resetta il contatore dopo il timeout
-                if (counter.timer) clearTimeout(counter.timer);
-                counter.timer = setTimeout(() => {
-                    delete userCommandSpamCounters[m.chat][sender];
-                }, RESET_TIMEOUT);
-            }
-
-            return true;
-        }
+    // Gestione anti-spam comandi
+    if (chat.antispamcomandi && !isOwner && isCommand) {
+        await handleCommandSpam(m, { chat, sender, isBotAdmin, conn });
     }
 
-    // Start
-    if (!userSpamCounters[m.chat]) {
-        userSpamCounters[m.chat] = {};
-    }
-    if (!userSpamCounters[m.chat][sender]) {
-        userSpamCounters[m.chat][sender] = { stickerCount: 0, photoVideoCount: 0, tagCount: 0, messageIds: [], lastMessageTime: 0, timer: null };
-    }
-
-    const counter = userSpamCounters[m.chat][sender];
-    const currentTime = Date.now();
-
-    // Start
-    const isSticker = m.message?.stickerMessage;
-    // DlStart
-    const isPhoto = m.message?.imageMessage || m.message?.videoMessage;
-    // Start
-    const isTaggingAll = m.message?.extendedTextMessage?.text?.includes('@all') || m.message?.extendedTextMessage?.text?.includes('@everyone');
-
-    if (isSticker || isPhoto || isTaggingAll) {
-        if (isSticker) {
-            counter.stickerCount++;
-        } else if (isPhoto) {
-            counter.photoVideoCount++;
-        } else if (isTaggingAll) {
-            counter.tagCount++;
-        }
-
-        counter.messageIds.push(m.key.id);
-        counter.lastMessageTime = currentTime;
-
-        // Start
-        if (counter.timer) {
-            clearTimeout(counter.timer);
-        }
-
-        // Start
-        const isStickerSpam = counter.stickerCount >= STICKER_LIMIT;
-        const isPhotoVideoSpam = counter.photoVideoCount >= PHOTO_VIDEO_LIMIT;
-        const isTagSpam = counter.tagCount > 0;
-
-        if (isStickerSpam || isPhotoVideoSpam || isTagSpam) {
-            if (isBotAdmin && bot.restrict) {
-                try {
-                    console.log('Spam rilevato! Modificando le impostazioni del gruppo...');
-
-                    // Start
-                    await conn.groupSettingUpdate(m.chat, 'announcement');
-                    console.log('Solo gli amministratori possono inviare messaggi.');
-
-                    // Start
-                    if (!isAdmin) {
-                        let responseb = await conn.groupParticipantsUpdate(m.chat, [sender], 'remove');
-                        console.log(`Participant removal response: ${JSON.stringify(responseb)}`);
-
-                        if (responseb[0].status === "404") {
-                            console.log('Utente non trovato o già rimosso.');
-                        }
-                    } else {
-                        console.log('L\'utente è un amministratore e non verrà rimosso.');
-                    }
-
-                    // Start
-                    for (const messageId of counter.messageIds) {
-                        await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: messageId, participant: delet } });
-                        console.log(`Messaggio con ID ${messageId} eliminato.`);
-                    }
-                    console.log('Tutti i messaggi di spam sono stati eliminati.');
-
-                    // Start
-                    await conn.groupSettingUpdate(m.chat, 'not_announcement');
-                    console.log('Chat riattivata per tutti i membri.');
-
-                    // Start
-                    await conn.sendMessage(m.chat, { text: '*SPAM RILEVATO*' });
-                    console.log('Messaggio di notifica antispam inviato.');
-
-                    // Start
-                    delete userSpamCounters[m.chat][sender];
-                    console.log('Contatore di spam per l\'utente resettato.');
-
-                } catch (error) {
-                    console.error('Errore durante la gestione dello spam:', error);
-                }
-            } else {
-                console.log('Bot non è amministratore o la restrizione è disattivata. Non posso eseguire l\'operazione.');
-            }
-        } else {
-            // Start
-            counter.timer = setTimeout(() => {
-                delete userSpamCounters[m.chat][sender];
-                console.log('Contatore di spam per l\'utente resettato dopo il timeout.');
-            }, RESET_TIMEOUT);
-        }
-    } else {
-        // Start
-        if (currentTime - counter.lastMessageTime > RESET_TIMEOUT && (counter.stickerCount > 0 || counter.photoVideoCount > 0 || counter.tagCount > 0)) {
-            console.log('Timeout scaduto. Reset del contatore di spam per l\'utente.');
-            delete userSpamCounters[m.chat][sender];
-        }
+    // Gestione anti-spam generale
+    if (!isOwner && (isSticker || isMedia || isMassTag)) {
+        await handleGeneralSpam(m, { chat, sender, isAdmin, isBotAdmin, conn });
     }
 
     return true;
+}
+
+// Funzioni di supporto
+function initializeContext(m) {
+    const chat = global.db.data.chats[m.chat] || {};
+    const sender = m.sender;
+    const isOwner = global.owner.map(([number]) => `${number}@s.whatsapp.net`).includes(sender);
+    
+    return { chat, sender, isOwner };
+}
+
+function checkMessageType(m) {
+    return {
+        isCommand: m.text?.startsWith('.'),
+        isSticker: Boolean(m.message?.stickerMessage),
+        isMedia: Boolean(m.message?.imageMessage || m.message?.videoMessage),
+        isMassTag: Boolean(
+            m.message?.extendedTextMessage?.text?.includes('@all') || 
+            m.message?.extendedTextMessage?.text?.includes('@everyone')
+        )
+    };
+}
+
+async function handleCommandSpam(m, { chat, sender, isBotAdmin, conn }) {
+    if (!userCommandSpamCounters.has(chat.id)) {
+        userCommandSpamCounters.set(chat.id, new Map());
+    }
+
+    const chatCounters = userCommandSpamCounters.get(chat.id);
+    const userCounter = chatCounters.get(sender) || { count: 0, timer: null };
+
+    // Aggiorna contatore
+    userCounter.count++;
+    if (userCounter.timer) clearTimeout(userCounter.timer);
+
+    // Controlla limite
+    if (userCounter.count > LIMITS.COMMAND) {
+        if (isBotAdmin) {
+            await punishUser(m, sender, conn, 'comando');
+        }
+        chatCounters.delete(sender);
+        return;
+    }
+
+    // Imposta timer di reset
+    userCounter.timer = setTimeout(() => {
+        chatCounters.delete(sender);
+        if (chatCounters.size === 0) {
+            userCommandSpamCounters.delete(chat.id);
+        }
+    }, LIMITS.RESET_TIMEOUT);
+
+    chatCounters.set(sender, userCounter);
+}
+
+async function handleGeneralSpam(m, { chat, sender, isAdmin, isBotAdmin, conn }) {
+    if (!userSpamCounters.has(chat.id)) {
+        userSpamCounters.set(chat.id, new Map());
+    }
+
+    const chatCounters = userSpamCounters.get(chat.id);
+    const userCounter = chatCounters.get(sender) || { 
+        sticker: 0, 
+        media: 0, 
+        tags: 0, 
+        messages: [], 
+        timer: null 
+    };
+
+    // Aggiorna contatori
+    if (m.message?.stickerMessage) userCounter.sticker++;
+    if (m.message?.imageMessage || m.message?.videoMessage) userCounter.media++;
+    if (m.message?.extendedTextMessage?.text?.includes('@all')) userCounter.tags++;
+    
+    userCounter.messages.push(m.key);
+    if (userCounter.timer) clearTimeout(userCounter.timer);
+
+    // Controlla limiti
+    const isSpamming = 
+        userCounter.sticker > LIMITS.STICKER ||
+        userCounter.media > LIMITS.MEDIA ||
+        userCounter.tags > LIMITS.TAG_ALL;
+
+    if (isSpamming && isBotAdmin) {
+        await punishUser(m, sender, conn, 'generale');
+        chatCounters.delete(sender);
+        return;
+    }
+
+    // Imposta timer di reset
+    userCounter.timer = setTimeout(() => {
+        chatCounters.delete(sender);
+        if (chatCounters.size === 0) {
+            userSpamCounters.delete(chat.id);
+        }
+    }, LIMITS.RESET_TIMEOUT);
+
+    chatCounters.set(sender, userCounter);
+}
+
+async function punishUser(m, sender, conn, type) {
+    try {
+        // 1. Rimuovi l'utente
+        await conn.groupParticipantsUpdate(m.chat, [sender], 'remove');
+        
+        // 2. Elimina tutti i messaggi di spam
+        const userCounter = userSpamCounters.get(m.chat)?.get(sender);
+        if (userCounter?.messages) {
+            await Promise.all(
+                userCounter.messages.map(msg => 
+                    conn.sendMessage(m.chat, { 
+                        delete: { ...msg, fromMe: false }
+                    }).catch(console.error)
+                )
+            );
+        }
+
+        // 3. Notifica il gruppo
+        await conn.sendMessage(m.chat, { 
+            text: `*ANTI-SPAM ${type.toUpperCase()}*\n@${sender.split('@')[0]} è stato rimosso per spam.`,
+            mentions: [sender]
+        });
+
+        // 4. Programma sban automatico
+        setTimeout(async () => {
+            await conn.groupParticipantsUpdate(m.chat, [sender], 'add');
+            await conn.sendMessage(m.chat, {
+                text: `*BAN CONCLUSO*\n@${sender.split('@')[0]} può ora rientrare nel gruppo.`,
+                mentions: [sender]
+            });
+        }, PUNISHMENTS.BAN_DURATION);
+
+        // 5. Temporanea restrizione gruppo (opzionale)
+        if (PUNISHMENTS.TEMP_RESTRICT) {
+            await conn.groupSettingUpdate(m.chat, 'announcement');
+            setTimeout(() => 
+                conn.groupSettingUpdate(m.chat, 'not_announcement'), 
+                30000
+            );
+        }
+    } catch (error) {
+        console.error('Errore nella punizione:', error);
+    }
 }

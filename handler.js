@@ -93,6 +93,7 @@ export async function handler(chatUpdate) {
                 if (!('name' in chat)) chat.name = this.getName(m.chat)
                 if (!('antivirus' in chat)) chat.antivirus = false; // Aggiunto antivirus
                 if (!('antispamcomandi' in chat)) chat.antispamcomandi = true; // Attivo di default
+                if (!('antibestemmie' in chat)) chat.antibestemmie = false; // Attivo/disattivo anti bestemmie
             } else
                 global.db.data.chats[m.chat] = {
                     name: this.getName(m.chat),
@@ -134,6 +135,8 @@ export async function handler(chatUpdate) {
                     warn: 0,
                     name: m.name,
                     antivirus: false, // Aggiunto antivirus
+                    antispamcomandi: true, // Attivo di default
+                    antibestemmie: false, // Attivo/disattivo anti bestemmie
                 }
             let settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
@@ -525,7 +528,7 @@ export async function participantsUpdate({ id, participants, action }) {
                                newsletterJid: '120363259442839354@newsletter',
                                serverMessageId: '', newsletterName: `${nomeDelBot}` },
                                externalAdReply: {
-                                    "title": `${action === 'add' ? '𝐌𝐞𝐬𝐬𝐚𝐠𝐠𝐢𝐨 𝐝𝐢 𝐛𝐞𝐧𝐯𝐞𝐧𝐮𝐭𝐨' : '𝐌𝐞𝐬𝐬𝐚𝐠𝐠𝐢𝐨 𝐝𝐢 𝐚𝐝𝐝𝐢𝐨'}`,
+                                    "title": `${action === 'add' ? '𝐌𝐞𝐬𝐬𝐚𝐠𝐠𝐢𝐨 𝐝𝐢 𝐛𝐞𝐧𝐯𝐞𝐧𝐭𝐨' : '𝐌𝐞𝐬𝐬𝐚𝐠𝐠𝐢𝐨 𝐝𝐢 𝐚𝐝𝐝𝐢𝐨'}`,
                                     "previewType": "PHOTO", 
                                     "thumbnailUrl": ``, 
                                     "thumbnail": apii.data,

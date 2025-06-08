@@ -40,6 +40,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     "Detect": chat.detect,
     "Risposte": chat.risposte,
     "Bestemmiometro": chat.bestemmiometro,
+    "Antibestemmie": chat.antibestemmie, // <-- aggiungi questa riga
     "GPT": chat.gpt,
     "JadiBot": chat.jadibot,
     "SoloGruppo": chat.sologruppo,
@@ -52,7 +53,8 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     "AntiTikTok": chat.antitiktok,
     "AntiPakistani": chat.antiArab,
     "Antivirus": chat.antivirus, // Aggiunto antivirus
-    "AntispamComandi": chat.antispamcomandi // Aggiunto AntispamComandi
+    "AntispamComandi": chat.antispamcomandi, // Aggiunto AntispamComandi
+    "Antibestemmie": chat.antibestemmie
   };
 
   let statusList = Object.entries(functions)

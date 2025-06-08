@@ -17,3 +17,9 @@ export async function before(m, { conn, isAdmin, isBotAdmin, isOwner, isROwner }
 
 > 𝐏𝐞𝐫 𝐮𝐥𝐭𝐞𝐫𝐢𝐨𝐫𝐢 𝐢𝐧𝐟𝐨𝐫𝐦𝐚𝐳𝐢𝐨𝐧𝐢 𝐨 𝐬𝐮𝐩𝐩𝐨𝐫𝐭𝐨, 𝐩𝐮𝐨𝐢 𝐜𝐨𝐧𝐭𝐚𝐭𝐭𝐚𝐫𝐞 𝐢 𝐜𝐫𝐞𝐚𝐭𝐨𝐫𝐢 𝐭𝐫𝐚𝐦𝐢𝐭𝐞 𝐥𝐞 𝐬𝐞𝐠𝐮𝐞𝐧𝐭𝐢 𝐫𝐞𝐟𝐞𝐫𝐞𝐧𝐳𝐞 𝐪𝐮𝐢 𝐬𝐨𝐭𝐭𝐨:
 ${message}
+`
+    });
+    return false;
+  }
+  return true;
+}

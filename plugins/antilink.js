@@ -1,1 +1,125 @@
-(function(_0x12ada3,_0x2848aa){const _0x25efdf=_0x3db3,_0x2cf951=_0x12ada3();while(!![]){try{const _0x492ffa=-parseInt(_0x25efdf(0xf3))/0x1+parseInt(_0x25efdf(0xdd))/0x2+-parseInt(_0x25efdf(0xe6))/0x3+-parseInt(_0x25efdf(0xed))/0x4+-parseInt(_0x25efdf(0xe0))/0x5+-parseInt(_0x25efdf(0xeb))/0x6+parseInt(_0x25efdf(0xe7))/0x7;if(_0x492ffa===_0x2848aa)break;else _0x2cf951['push'](_0x2cf951['shift']());}catch(_0x57ebd1){_0x2cf951['push'](_0x2cf951['shift']());}}}(_0x5b66,0xbcd14));function _0x3db3(_0x1bb6c4,_0x5a25c4){const _0x5b66ed=_0x5b66();return _0x3db3=function(_0x3db3ea,_0x4f9af5){_0x3db3ea=_0x3db3ea-0xd8;let _0x51e7fa=_0x5b66ed[_0x3db3ea];return _0x51e7fa;},_0x3db3(_0x1bb6c4,_0x5a25c4);}let linkRegex=/chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;function _0x5b66(){const _0x236025=['Halo','chats','1447664GlkZMx','data','sender','restrict','key','https://telegra.ph/file/a3b727e38149464863380.png','antiLink','reply','isGroup','sendMessage','https://chat.whatsapp.com','229082snqQAz','text','isBaileys','6227940WXMDaG','includes','https://chat.whatsapp.com/','user','404','buffer','3583551GtkkmK','44002063YDdZAC','exec','0@s.whatsapp.net','chat','6752016MNrVPW','BEGIN:VCARD\x0aVERSION:5.0\x0aN:;Unlimited;;;\x0aFN:Unlimited\x0aORG:Unlimited\x0aTITLE:\x0aitem1.TEL;waid=19709001746:+1\x20(970)\x20900-1746\x0aitem1.X-ABLabel:Unlimited\x0aX-WA-BIZ-DESCRIPTION:ofc\x0aX-WA-BIZ-NAME:Unlimited\x0aEND:VCARD','2456196fJjQSR','participant','fromMe','⚠\x20𝐋𝐈𝐍𝐊\x20𝐃𝐈\x20𝐀𝐋𝐓𝐑𝐈\x20𝐆𝐑𝐔𝐏𝐏𝐈\x20𝐍𝐎𝐍\x20𝐒𝐎𝐍𝐎\x20𝐂𝐎𝐍𝐒𝐄𝐍𝐓𝐈𝐓𝐈\x20'];_0x5b66=function(){return _0x236025;};return _0x5b66();}export async function before(_0x4da8ca,{isAdmin:_0x37f7b6,isBotAdmin:_0x590596}){const _0x5a40df=_0x3db3;if(_0x4da8ca[_0x5a40df(0xdf)]&&_0x4da8ca[_0x5a40df(0xef)])return!0x0;if(!_0x4da8ca[_0x5a40df(0xda)])return!0x1;let _0x42c611=global['db'][_0x5a40df(0xf4)][_0x5a40df(0xf2)][_0x4da8ca[_0x5a40df(0xea)]],_0x7fcfd3=_0x4da8ca['key'][_0x5a40df(0xee)],_0xf980b7=_0x4da8ca[_0x5a40df(0xf7)]['id'],_0x3c7bdb=global['db'][_0x5a40df(0xf4)]['settings'][this[_0x5a40df(0xe3)]['jid']]||{};const _0xac004a=linkRegex[_0x5a40df(0xe8)](_0x4da8ca[_0x5a40df(0xde)]),_0x5ac514=_0x5a40df(0xdc);if(_0x37f7b6&&_0x42c611[_0x5a40df(0xd8)]&&_0x4da8ca[_0x5a40df(0xde)][_0x5a40df(0xe1)](_0x5ac514))return;if(_0x42c611[_0x5a40df(0xd8)]&&_0xac004a&&!_0x37f7b6){if(_0x590596){const _0x3733e1=_0x5a40df(0xe2)+await this['groupInviteCode'](_0x4da8ca[_0x5a40df(0xea)]);if(_0x4da8ca[_0x5a40df(0xde)][_0x5a40df(0xe1)](_0x3733e1))return!0x0;}if(_0x590596&&_0x3c7bdb[_0x5a40df(0xf6)]){let _0x6c587={'key':{'participants':_0x5a40df(0xe9),'fromMe':![],'id':_0x5a40df(0xf1)},'message':{'locationMessage':{'name':'𝐀𝐧𝐭𝐢\x20-\x20𝐋𝐢𝐧𝐤\x20','jpegThumbnail':await(await fetch(_0x5a40df(0xf8)))[_0x5a40df(0xe5)](),'vcard':_0x5a40df(0xec)}},'participant':_0x5a40df(0xe9)};conn[_0x5a40df(0xd9)](_0x4da8ca['chat'],_0x5a40df(0xf0),_0x6c587),await conn[_0x5a40df(0xdb)](_0x4da8ca[_0x5a40df(0xea)],{'delete':{'remoteJid':_0x4da8ca[_0x5a40df(0xea)],'fromMe':![],'id':_0xf980b7,'participant':_0x7fcfd3}});let _0x556386=await conn['groupParticipantsUpdate'](_0x4da8ca['chat'],[_0x4da8ca[_0x5a40df(0xf5)]],'remove');if(_0x556386[0x0]['status']===_0x5a40df(0xe4))return;}else{if(!_0x3c7bdb[_0x5a40df(0xf6)])return;}}return!0x0;}
+let linkRegex = /chat\.whatsapp\.com\/([0-9A-Za-z]{20,24})/i;
+let urlRegex = /(https?:\/\/[^\s]+)/g;
+
+/* 
+*  ANTI-LINK SYSTEM
+*  Developed by Death
+*  © 2024 - All rights reserved
+*/
+
+function extractTextAndUrlsFromMessage(message) {
+    let extractedContent = {
+        text: '',
+        urls: []
+    };
+
+    if (!message) return extractedContent;
+
+    function findContentInObject(obj) {
+        if (typeof obj === 'string') {
+            extractedContent.text += ' ' + obj;
+            const foundUrls = obj.match(urlRegex);
+            if (foundUrls) {
+                extractedContent.urls.push(...foundUrls);
+            }
+        } else if (typeof obj === 'object' && obj !== null) {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    findContentInObject(obj[key]);
+                }
+            }
+        }
+    }
+    findContentInObject(message);
+    return {
+        text: extractedContent.text.trim(),
+        urls: [...new Set(extractedContent.urls)]
+    };
+}
+
+export async function before(m, { isAdmin, isBotAdmin }) {
+    if (m.isBaileys && m.fromMe) {
+        return !0;
+    }
+    if (!m.isGroup) {
+        return !1;
+    }
+    
+    // System developed by Death
+    let chat = global.db.data.chats[m.chat];
+    let delet = m.key.participant;
+    let bang = m.key.id;
+    const user = `@${m.sender.split('@')[0]}`;
+    const unv = {
+        key: {
+            participants: "0@s.whatsapp.net",
+            remoteJid: "status@broadcast",
+            fromMe: false,
+            id: "Halo"
+        },
+        message: {
+            contactMessage: {
+                vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Cellulare\nEND:VCARD`
+            }
+        },
+        participant: "0@s.whatsapp.net"
+    };
+    let bot = global.db.data.settings[this.user.jid] || {};
+    
+    const { text: messageText, urls: extractedUrls } = extractTextAndUrlsFromMessage(m.message || {});
+
+    const grupoPrefix = "https://chat.whatsapp.com";
+    let containsGroupLink = false;
+    if (linkRegex.exec(messageText)) {
+        containsGroupLink = true;
+    }
+    if (!containsGroupLink) {
+        for (const url of extractedUrls) {
+            if (linkRegex.exec(url)) {
+                containsGroupLink = true;
+                break;
+            }
+        }
+    }
+
+    if (isAdmin && chat.antiLink && (messageText.includes(grupoPrefix) || containsGroupLink)) {
+        return;
+    }
+    if (chat.antiLink && containsGroupLink && !isAdmin) {
+        if (isBotAdmin) {
+            const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
+            if (messageText.includes(linkThisGroup) || extractedUrls.includes(linkThisGroup)) {
+                return !0;
+            }
+        }
+        if (!isBotAdmin) {
+            return m.reply('𝐩𝐞𝐫 𝐪𝐮𝐞𝐬𝐭𝐚 𝐯𝐨𝐥𝐭𝐚 𝐭𝐢 𝐬𝐞𝐢 𝐬𝐚𝐥𝐯𝐚𝐭𝐨, 𝐧𝐨𝐧 𝐬𝐨𝐧𝐨 𝐚𝐝𝐦𝐢𝐧 𝐞 𝐧𝐨𝐧 𝐩𝐨𝐬𝐬𝐨 𝐟𝐚𝐫𝐞 𝐧𝐢𝐞𝐧𝐭𝐞\n\n⚡ Developed by Death');
+        }
+        
+        await conn.sendMessage(m.chat, {
+            text: `*「 𝐀𝐍𝐓𝐈-𝐋𝐈𝐍𝐊 𝐀𝐓𝐓𝐈𝐕𝐀𝐓𝐎 」*\n\n${user} 🤨 𝐇𝐚𝐢 𝐢𝐧𝐟𝐫𝐚𝐧𝐭𝐨 𝐋𝐞 𝐫𝐞𝐠𝐨𝐥𝐞 𝐝𝐞𝐥 𝐠𝐫𝐮𝐩𝐩𝐨.\n\n🔰 Powered by Death`, 
+            mentions: [m.sender]
+        }, {
+            quoted: unv, 
+            ephemeralExpiration: 24*60*100, 
+            disappearingMessagesInChat: 24*60*100
+        });
+
+        if (isBotAdmin) {
+            await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }});
+            let responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+            if (responseb[0].status === "404") {
+                return;
+            }
+        } else if (!bot.restrict) {
+            return m.reply('𝐂𝐎𝐍𝐓𝐀𝐓𝐓𝐀 𝐈𝐋 𝐏𝐑𝐎𝐏𝐑𝐈𝐄𝐓𝐀𝐑𝐈𝐎 𝐃𝐄𝐋 𝐁𝐎𝐓 𝐏𝐄𝐑 𝐀𝐓𝐓𝐈𝐕𝐀𝐑𝐄 𝐈𝐋 𝐑𝐄𝐒𝐓𝐑𝐈𝐂𝐓\n\n⚡ Developed by Death');
+        }
+    }
+    return !0;
+}
+
+/*
+*  Death System - Advanced Protection
+*  github.com/death-developer
+*  © 2024 Death Development
+*/
