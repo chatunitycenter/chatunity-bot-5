@@ -665,6 +665,15 @@ let handler = async (_0x534187, {
         }
         _0x2bc059['antibestemmie'] = _0x152cab;
         break;
+    case 'antibot':
+        if (_0x534187['isGroup']) {
+            if (!(_0x54956f || _0x4b91af)) {
+                global['dfail']('admin', _0x534187, _0x1226e2);
+                throw ![];
+            }
+        }
+        _0x2bc059['antibot'] = _0x152cab;
+        break;
     default:
         let _0x15ff44 = {
             'key': {

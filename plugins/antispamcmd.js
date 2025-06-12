@@ -1,12 +1,8 @@
 const userCommandSpamCounters = new Map();
-const userSpamCounters = new Map();
 
 // Configurazioni
 const LIMITS = {
     COMMAND: 5,         // Max comandi in 5 secondi
-    STICKER: 6,         // Max sticker in 5 secondi
-    MEDIA: 3,           // Max foto/video in 5 secondi
-    TAG_ALL: 1,         // Max @all/@everyone
     RESET_TIMEOUT: 5000 // 5 secondi
 };
 
@@ -20,17 +16,41 @@ export async function before(m, { isAdmin, isBotAdmin, conn }) {
     if (m.isBaileys && m.fromMe) return true;
     if (!m.isGroup) return false;
 
-    const { chat, sender, isOwner } = initializeContext(m);
-    const { isCommand, isSticker, isMedia, isMassTag } = checkMessageType(m);
+    const chat = global.db.data.chats[m.chat] || {};
+    const sender = m.sender;
+    const isOwner = global.owner.map(([number]) => `${number}@s.whatsapp.net`).includes(sender);
 
-    // Gestione anti-spam comandi
+    // Rileva comando (inizia con prefisso del bot)
+    const prefixes = [global.prefix || '.', '/', '!', '#'];
+    const isCommand = prefixes.some(p => m.text?.startsWith(p));
+
+    // Solo anti-spam comandi
     if (chat.antispamcomandi && !isOwner && isCommand) {
-        await handleCommandSpam(m, { chat, sender, isBotAdmin, conn });
-    }
+        if (!userCommandSpamCounters.has(m.chat)) {
+            userCommandSpamCounters.set(m.chat, new Map());
+        }
+        const chatCounters = userCommandSpamCounters.get(m.chat);
+        let userCounter = chatCounters.get(sender) || { count: 0, timer: null };
 
-    // Gestione anti-spam generale
-    if (!isOwner && (isSticker || isMedia || isMassTag)) {
-        await handleGeneralSpam(m, { chat, sender, isAdmin, isBotAdmin, conn });
+        userCounter.count++;
+        if (userCounter.timer) clearTimeout(userCounter.timer);
+
+        if (userCounter.count > LIMITS.COMMAND) {
+            if (isBotAdmin) {
+                await punishUser(m, sender, conn, 'comando');
+            }
+            chatCounters.delete(sender);
+            return false;
+        }
+
+        userCounter.timer = setTimeout(() => {
+            chatCounters.delete(sender);
+            if (chatCounters.size === 0) {
+                userCommandSpamCounters.delete(m.chat);
+            }
+        }, LIMITS.RESET_TIMEOUT);
+
+        chatCounters.set(sender, userCounter);
     }
 
     return true;
@@ -89,67 +109,10 @@ async function handleCommandSpam(m, { chat, sender, isBotAdmin, conn }) {
     chatCounters.set(sender, userCounter);
 }
 
-async function handleGeneralSpam(m, { chat, sender, isAdmin, isBotAdmin, conn }) {
-    if (!userSpamCounters.has(chat.id)) {
-        userSpamCounters.set(chat.id, new Map());
-    }
-
-    const chatCounters = userSpamCounters.get(chat.id);
-    const userCounter = chatCounters.get(sender) || { 
-        sticker: 0, 
-        media: 0, 
-        tags: 0, 
-        messages: [], 
-        timer: null 
-    };
-
-    // Aggiorna contatori
-    if (m.message?.stickerMessage) userCounter.sticker++;
-    if (m.message?.imageMessage || m.message?.videoMessage) userCounter.media++;
-    if (m.message?.extendedTextMessage?.text?.includes('@all')) userCounter.tags++;
-    
-    userCounter.messages.push(m.key);
-    if (userCounter.timer) clearTimeout(userCounter.timer);
-
-    // Controlla limiti
-    const isSpamming = 
-        userCounter.sticker > LIMITS.STICKER ||
-        userCounter.media > LIMITS.MEDIA ||
-        userCounter.tags > LIMITS.TAG_ALL;
-
-    if (isSpamming && isBotAdmin) {
-        await punishUser(m, sender, conn, 'generale');
-        chatCounters.delete(sender);
-        return;
-    }
-
-    // Imposta timer di reset
-    userCounter.timer = setTimeout(() => {
-        chatCounters.delete(sender);
-        if (chatCounters.size === 0) {
-            userSpamCounters.delete(chat.id);
-        }
-    }, LIMITS.RESET_TIMEOUT);
-
-    chatCounters.set(sender, userCounter);
-}
-
 async function punishUser(m, sender, conn, type) {
     try {
         // 1. Rimuovi l'utente
         await conn.groupParticipantsUpdate(m.chat, [sender], 'remove');
-        
-        // 2. Elimina tutti i messaggi di spam
-        const userCounter = userSpamCounters.get(m.chat)?.get(sender);
-        if (userCounter?.messages) {
-            await Promise.all(
-                userCounter.messages.map(msg => 
-                    conn.sendMessage(m.chat, { 
-                        delete: { ...msg, fromMe: false }
-                    }).catch(console.error)
-                )
-            );
-        }
 
         // 3. Notifica il gruppo
         await conn.sendMessage(m.chat, { 

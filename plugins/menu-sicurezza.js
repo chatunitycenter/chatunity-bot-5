@@ -40,21 +40,22 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     "Detect": chat.detect,
     "Risposte": chat.risposte,
     "Bestemmiometro": chat.bestemmiometro,
-    "Antibestemmie": chat.antibestemmie, // <-- aggiungi questa riga
+    "Antibestemmie": chat.antibestemmie,
     "GPT": chat.gpt,
     "JadiBot": chat.jadibot,
     "SoloGruppo": chat.sologruppo,
     "SoloPrivato": chat.soloprivato,
     "ModoAdmin": chat.modoadmin,
     "BanGruppo": chat.isBanned,
-    "Antiporno": chat.antiPorno,
+    "Antiporno": chat.antiporno,
     "AntiCall": chat.antiCall,
     "AntiInstagram": chat.antiinsta,
     "AntiTikTok": chat.antitiktok,
     "AntiPakistani": chat.antiArab,
-    "Antivirus": chat.antivirus, // Aggiunto antivirus
-    "AntispamComandi": chat.antispamcomandi, // Aggiunto AntispamComandi
-    "Antibestemmie": chat.antibestemmie
+    "Antivirus": chat.antivirus,
+    "AntispamComandi": chat.antispamcomandi,
+    "SoloMaggiorenni": chat.solomaggiorenni,
+    "Antibot": chat.antibot
   };
 
   let statusList = Object.entries(functions)

@@ -94,6 +94,7 @@ export async function handler(chatUpdate) {
                 if (!('antivirus' in chat)) chat.antivirus = false; // Aggiunto antivirus
                 if (!('antispamcomandi' in chat)) chat.antispamcomandi = true; // Attivo di default
                 if (!('antibestemmie' in chat)) chat.antibestemmie = false; // Attivo/disattivo anti bestemmie
+                if (!('antibot' in chat)) chat.antibot = false; // Disattivato di default
             } else
                 global.db.data.chats[m.chat] = {
                     name: this.getName(m.chat),
@@ -137,6 +138,7 @@ export async function handler(chatUpdate) {
                     antivirus: false, // Aggiunto antivirus
                     antispamcomandi: true, // Attivo di default
                     antibestemmie: false, // Attivo/disattivo anti bestemmie
+                    antibot: false, // Disattivato di default
                 }
             let settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}

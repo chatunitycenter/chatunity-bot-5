@@ -8,6 +8,12 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
   const emoji2 = "😕";
   const msm = "❗";
 
+  // Solo se attivo solomaggiorenni nel gruppo
+  const chat = global.db.data.chats[m.chat];
+  if (!chat?.solomaggiorenni) {
+    return conn.reply(m.chat, `${emoji} Il comando è disponibile solo se attivi *Solo Maggiorenni* con .attiva solomaggiorenni`, m);
+  }
+
   if (!args[0]) {
     return conn.reply(m.chat, `${emoji} Inserisci la ricerca che vuoi fare su Pornhub.\nEsempio: ${usedPrefix + command} con la mia amica`, m);
   }
