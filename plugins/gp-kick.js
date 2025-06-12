@@ -32,7 +32,7 @@ let handler = async (m, { conn }) => {
         message: {
             locationMessage: {
                 name: 'Unlimited',
-                jpegThumbnail: await (await fetch('https://i.ibb.co/Xk5Q2vB9/Whats-App-Image-2025-04-16-at-10-39-48.jpg')).buffer(),
+                jpegThumbnail: await (await fetch('https://i.ibb.co/6RMtRXW0/dragonball.jpg')).buffer(),
                 vcard: 'BEGIN:VCARD\nVERSION:5.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nitem1.TEL;waid=19709001746:+1 (970) 900-1746\nitem1.X-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD'
             }
         },

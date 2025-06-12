@@ -26,12 +26,12 @@ const handler = async (message, { conn, usedPrefix, command }) => {
 
     const menuText = generateMenuText(usedPrefix, botName, userCount);
 
-    const imagePath = path.join(__dirname, '../menu/chatunitybot.mp4');
+    const videoPath = path.join(__dirname, '../menu/edit2.mp4'); 
 
     await conn.sendMessage(
         message.chat,
         {
-            image: { url: imagePath },
+            video: { url: videoPath },
             caption: menuText,
             footer: 'Scegli un menu:',
             buttons: [
@@ -70,8 +70,7 @@ function generateMenuText(prefix, botName, userCount) {
 ┃◈  
 ┃◈╭─✦ *MUSICA & AUDIO* ✦═╗  
 ┃◈┃• 🎵 *.play* (canzone)  
-┃◈┃• 🎥 *.play2* (canzone)  
-┃◈┃• 🔊 *.ytmp4* (in arrivo)  
+┃◈┃• 🎥 *.playlist*   
 ┃◈┃• 🎶 *.shazam* (audio)  
 ┃◈┃• 🔊 *.tomp3* (video)  
 ┃◈┃• 🎤 *.lyrics* (artista-titolo)  
@@ -191,7 +190,7 @@ function generateMenuText(prefix, botName, userCount) {
 ┃◈╰━━━━━━━━━━━━┈⊷  
 ┃◈  
 ┃◈┃• *𝑽𝑬𝑹𝑺𝑰𝑶𝑵𝑬:* ${vs}  
-┃◈┃• *𝐂𝐎𝐋𝐋𝐀𝐁: 𝐉𝐉𝐊*  
+┃◈┃• *𝐂𝐎𝐋𝐋𝐀𝐁: 𝐃𝐑𝐆𝐁* 
 ┃◈┃• *𝐒𝐔𝐏𝐏𝐎𝐑𝐓𝐎:* (.supporto)  
 ┃◈└──────────┈⊷  
 ╰━━━━━━━━━━━━━┈⊷  

@@ -42,7 +42,7 @@ class MusicPlayer {
 // ==================== 📁 DATABASE ====================
 const DB = {
   PATH: path.join('./database', 'Musica.json'),
-  
+
   init() {
     if (!fs.existsSync('./database')) fs.mkdirSync('./database', { recursive: true });
     if (!fs.existsSync(this.PATH)) fs.writeFileSync(this.PATH, '{}');
@@ -62,7 +62,9 @@ const DB = {
 
   update(userId, updater) {
     const data = this.read();
-    updater(data[userId] = data[userId] || []);
+    // Assicurati che l'array esista
+    if (!Array.isArray(data[userId])) data[userId] = [];
+    updater(data[userId]);
     this.write(data);
   }
 };
@@ -71,7 +73,51 @@ const DB = {
 const handler = async (m, { conn, text, args, command, usedPrefix }) => {
   DB.init();
   const userId = m.sender;
-  const quotedUser = m.quoted?.sender;
+  // Forza sempre la playlist personale quando il comando arriva da bottone
+  const isButton = !!m?.key?.id && !text;
+  const targetUser = isButton ? userId : (m.quoted?.sender && m.quoted.sender !== userId ? m.quoted.sender : userId);
+  const userName = (m.quoted?.sender && m.quoted.sender !== userId) ? (m.quoted.pushName || 'Utente') : null;
+
+  // Gestione comando playlist anche se text è vuoto (bottone)
+  if (command === 'playlist' && (!text || text.trim() === '')) {
+    const songs = DB.read()[targetUser] || [];
+
+    if (!songs.length) {
+      return m.reply(`${BOT_THEME.EMOJIS.INFO} ${userName ? `${userName} non ha brani salvati` : 'La tua playlist è vuota!'}`);
+    }
+
+    let message = `${BOT_THEME.FRAME.TOP}\n` +
+                 `${BOT_THEME.FRAME.MIDDLE}\n` +
+                 `${BOT_THEME.FRAME.LINE} ${BOT_THEME.EMOJIS.PLAYLIST} ${userName ? `Playlist di ${userName}` : 'La tua playlist'}\n`;
+
+    songs.slice(0, 10).forEach((song, index) => {
+      message += `${BOT_THEME.FRAME.LINE} ${index + 1}. ${song.title}\n` +
+                `${BOT_THEME.FRAME.LINE} ⏳ ${song.timestamp} | 📺 ${song.channel}\n`;
+    });
+
+    if (songs.length > 10) {
+      message += `${BOT_THEME.FRAME.LINE} ...e altri ${songs.length - 10} brani\n`;
+    }
+
+    message += `${BOT_THEME.FRAME.BOTTOM}\n\n` +
+               `${BOT_THEME.EMOJIS.HEART} ${BOT_THEME.FRAME.SIGNATURE}`;
+
+    const buttons = songs.slice(0, 5).map((song, i) => (
+      { buttonId: `${usedPrefix}play ${song.title}`, buttonText: { displayText: `${i + 1}🎵 ${song.title.slice(0, 20)}` }, type: 1 }
+    ));
+
+    if (!userName) {
+      buttons.push(
+        { buttonId: `${usedPrefix}elimina`, buttonText: { displayText: `${BOT_THEME.EMOJIS.DELETE} Elimina` }, type: 1 }
+      );
+    }
+
+    return conn.sendMessage(m.chat, {
+      text: message,
+      buttons: buttons,
+      footer: 'Seleziona un brano da riprodurre'
+    }, { quoted: m });
+  }
 
   try {
     // 🎵 SALVA CANZONE
@@ -104,7 +150,7 @@ const handler = async (m, { conn, text, args, command, usedPrefix }) => {
       await conn.sendMessage(m.chat, { delete: loadingMsg.key });
 
       if (exists) {
-        return m.reply(`${BOT_THEME.EMOJIS.ERROR} Canzone già in playlist!`);
+        return m.reply(`${BOT_THEME.EMOJIS.ERROR} Canzone già in playlist! Usa .playlist per vedere i brani salvati.`);
       }
 
       return conn.sendMessage(m.chat, {
@@ -123,8 +169,6 @@ const handler = async (m, { conn, text, args, command, usedPrefix }) => {
 
     // 📋 VISUALIZZA PLAYLIST
     if (command === 'playlist') {
-      const targetUser = quotedUser || userId;
-      const userName = quotedUser ? (m.quoted.pushName || 'Utente') : null;
       const songs = DB.read()[targetUser] || [];
 
       if (!songs.length) {
@@ -151,7 +195,7 @@ const handler = async (m, { conn, text, args, command, usedPrefix }) => {
         { buttonId: `${usedPrefix}play ${song.title}`, buttonText: { displayText: `${i + 1}🎵 ${song.title.slice(0, 20)}` }, type: 1 }
       ));
 
-      if (!quotedUser) {
+      if (!userName) {
         buttons.push(
           { buttonId: `${usedPrefix}elimina`, buttonText: { displayText: `${BOT_THEME.EMOJIS.DELETE} Elimina` }, type: 1 }
         );

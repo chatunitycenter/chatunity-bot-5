@@ -62,7 +62,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 ┃◈┃• 🌐 *Network*: ${networkSpeed}
 ┃◈└───────────┈⊷
 ┃◈┃• *𝑽𝑬𝑹𝑺𝑰𝑶𝑵𝑬:* ${vs}
-┃◈┃•  𝐂𝐎𝐋𝐋𝐀𝐁: 𝐉𝐉𝐊
+┃◈┃•  𝐂𝐎𝐋𝐋𝐀𝐁: 𝐃𝐑𝐆𝐁
 ┃◈┃• *𝐒𝐔𝐏𝐏𝐎𝐑𝐓𝐎:* (.supporto)
 ╰━━━━━━━━━━━━━┈·๏
 
@@ -90,7 +90,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         mediaType: 1,
         renderLargerThumbnail: false,
         previewType: 'thumbnail',
-        thumbnail: await fetchThumbnail('https://i.ibb.co/Xk5Q2vB9/Whats-App-Image-2025-04-16-at-10-39-48.jpg'),
+        thumbnail: await fetchThumbnail('https://i.ibb.co/6RMtRXW0/dragonball.jpg'),
       }
     } catch (error) {
       console.error('Error fetching thumbnail:', error)

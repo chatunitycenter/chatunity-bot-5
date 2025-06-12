@@ -306,7 +306,7 @@ function _0x5b83() {
         './src/avatar_contact.png',
         'now',
         'command',
-        'https://i.ibb.co/Xk5Q2vB9/Whats-App-Image-2025-04-16-at-10-39-48.jpg',
+        'https://i.ibb.co/6RMtRXW0/dragonball.jpg',
         '120363259442839354@newsletter',
         'uptime',
         'lhOtP',

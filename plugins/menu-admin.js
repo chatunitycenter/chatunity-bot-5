@@ -1,6 +1,13 @@
 import { performance } from 'perf_hooks';
 import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const handler = async (message, { conn, usedPrefix, command }) => {
     const userCount = Object.keys(global.db.data.users).length;
     const botName = global.db.data.nomedelbot || 'ChatUnity';
@@ -20,11 +27,11 @@ const handler = async (message, { conn, usedPrefix, command }) => {
 
     const menuText = generateMenuText(usedPrefix, botName, userCount);
 
-    const imagePath = './menu/chatunitybot.jpg';
+    const videoPath = path.join(__dirname, '../menu/edit4.mp4'); 
     await conn.sendMessage(
         message.chat,
         {
-            image: { url: imagePath },
+            video: { url: videoPath },
             caption: menuText,
             footer: 'Scegli un menu:',
             buttons: [

@@ -1,38 +1,57 @@
 import axios from "axios";
-import fs from "fs";
 
-const fluxHandler = async (m, { text, conn }) => {
-    if (!text) return m.reply("Per favore dai un prompt per la creazione dell'immagine.");
+var handler = async (m, { text, usedPrefix, command, conn }) => {
+  if (!text) {
+    await m.reply("Per favore, scrivi una descrizione per generare l'immagine.");
+    return;
+  }
 
-    await m.reply("> CREAZIONE DELL'IMMAGINE...🔥");
+  try {
+    await conn.sendPresenceUpdate("composing", m.chat);
+    await m.reply("> CREO IMMAGINE ...🔥");
 
-    const apiUrl = `https://api.siputzx.my.id/api/ai/flux?prompt=${encodeURIComponent(text)}`;
-
-    try {
-        const response = await axios.get(apiUrl, { responseType: "arraybuffer" });
-
-        if (!response || !response.data) {
-            return m.reply("Error: The API did not return a valid image. Try again later.");
-        }
-
-        const imageBuffer = Buffer.from(response.data, "binary");
-
-        await conn.sendMessage(m.chat, {
-            image: imageBuffer,
-            caption: `💸 *Immagine generata da Chatunity × Origin AI* 🚀\n✨ Prompt: *${text}*`
-        });
-
-    } catch (error) {
-        console.error("FluxAI Error:", error);
-        m.reply(`An error occurred: ${error.response?.data?.message || error.message || "Unknown error"}`);
+    let apiUrl;
+    switch (command) {
+      case "fluxai":
+      case "flux":
+      case "imagine":
+        apiUrl = `https://api.siputzx.my.id/api/ai/flux?prompt=${encodeURIComponent(text)}`;
+        break;
+      case "stablediffusion":
+      case "sdiffusion":
+      case "imagine2":
+        apiUrl = `https://api.siputzx.my.id/api/ai/stable-diffusion?prompt=${encodeURIComponent(text)}`;
+        break;
+      case "stabilityai":
+      case "stability":
+      case "imagine3":
+        apiUrl = `https://api.siputzx.my.id/api/ai/stabilityai?prompt=${encodeURIComponent(text)}`;
+        break;
+      default:
+        return m.reply("Comando non riconosciuto.");
     }
+
+    const response = await axios.get(apiUrl, { responseType: "arraybuffer" });
+    if (!response || !response.data) {
+      return m.reply("Errore: l'API non ha restituito un'immagine valida. Riprova più tardi.");
+    }
+
+    const imageBuffer = Buffer.from(response.data, "binary");
+
+    await conn.sendMessage(m.chat, {
+      image: imageBuffer,
+      caption: `💸 *Immagine generata da chatunity IA developed by onix & origin* 🚀\n✨ Prompt: *${text}*`
+    });
+  } catch (error) {
+    console.error("FluxAI Error:", error);
+    await m.reply(`Si è verificato un errore: ${error.response?.data?.message || error.message || "Errore sconosciuto"}`);
+  }
 };
 
-fluxHandler.command = ["fluxai", "flux", "imagine", "immagine", "img"];
-fluxHandler.desc = "Generate an image using AI.";
-fluxHandler.category = "main";
-fluxHandler.react = "🚀";
-fluxHandler.help = ["fluxai"];
-fluxHandler.tags = ["ai"];
+handler.command = [
+  "fluxai", "flux", "imagine",
+  "stablediffusion", "sdiffusion", "imagine2",
+  "stabilityai", "stability", "imagine3"
+];
 
-export default fluxHandler;
+export default handler;

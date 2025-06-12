@@ -74,17 +74,17 @@ ${statusList.split('\n').map(line => `┃◈┃• ${line}`).join('\n')}
 ┃◈┃
 ┃◈└───────────┈⊷
 ┃◈┃• *𝑽𝑬𝑹𝑺𝑰𝑶𝑵𝑬:* ${vs}
-┃◈┃•  𝐂𝐎𝐋𝐋𝐀𝐁: 𝐉𝐉𝐊
+┃◈┃•  𝐂𝐎𝐋𝐋𝐀𝐁: 𝐃𝐑𝐆𝐁
 ┃◈┃• *𝐒𝐔𝐏𝐏𝐎𝐑𝐓𝐎:* (.supporto)
 ╰━━━━━━━━━━━━━┈·๏
 `.trim();
 
   // Percorso dell'immagine
-  const imagePath = path.join(__dirname, '../menu/chatunitybot.jpg');
+  const videoPath = path.join(__dirname, '../menu/edit5.mp4');
 
   // Invia il menu con l'immagine e i bottoni
   await conn.sendMessage(m.chat, {
-    image: { url: imagePath },
+    video: { url: videoPath },
     caption: menuText,
     footer: 'Scegli un menu:',
     buttons: [

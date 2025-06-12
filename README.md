@@ -1,7 +1,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=150&section=header&text=ChatUnity%20-%20X%20JUJUTSU%20KAISEN&fontSize=30&fontColor=FFFFFF&animation=fadeIn" width="100%"/> 
 
 <p align="center">
-  <img src="https://i.ibb.co/Xk5Q2vB9/Whats-App-Image-2025-04-16-at-10-39-48.jpg"  style="width: 100%; height: auto; max-width: 400px;">
+  <img src="https://i.ibb.co/6RMtRXW0/dragonball.jpg"  style="width: 100%; height: auto; max-width: 400px;">
 </p>
 
 <h1 align="center">© ChatUnity-Bot 5.0🤖</h1>
